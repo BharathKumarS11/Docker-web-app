@@ -9,8 +9,7 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE_NAME: devops-web-app
-  DOCKER_IMAGE_TAG: test
+  IMAGE_NAME: devops-web-app
 
 jobs:
 
@@ -23,7 +22,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t devops-web-app:test .
+        run: docker build -t ${{ env.IMAGE_NAME }}:test .
+
+      - name: Save Docker image
+        run: docker save ${{ env.IMAGE_NAME }}:test -o docker-image.tar
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: docker-image.tar
 
   test:
     name: Test Application
@@ -42,17 +50,11 @@ jobs:
       - name: Load Docker image
         run: docker load -i docker-image.tar
 
-      - name: Save Docker image
-        run: docker save ${{ env.IMAGE_NAME }}:test -o docker-image.tar
-
-      - name: Upload Docker image
-        uses: actions/upload-artifact@v4
-        with:
-         name: docker-image
-         path: docker-image.tar
+      - name: Show secret message
+        run: 'echo "Secret says: ${{ secrets.APP_MESSAGE }}"'
 
       - name: Run container
-        run: docker run -d --name test-container -p 8080:80 devops-web-app:test
+        run: docker run -d --name test-container -p 8080:80 ${{ env.IMAGE_NAME }}:test
 
       - name: Test application
         run: curl --fail http://localhost:8080
