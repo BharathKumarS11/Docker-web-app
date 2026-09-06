@@ -1,3 +1,6 @@
+env:
+  DOCKER_IMAGE_NAME: devops-web-app
+  DOCKER_IMAGE_TAG: test
 name: Docker CI
 
 on:
