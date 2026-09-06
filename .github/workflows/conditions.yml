@@ -1,31 +1,37 @@
-name: Conditions Practice
+name: Failure and Always Practice
 
 on:
   push:
     branches:
       - main
 
-  pull_request:
-    branches:
-      - main
-
 jobs:
 
-  check:
-    name: Check Event
+  test:
+    name: Test Failure Handling
     runs-on: ubuntu-latest
 
     steps:
-      - name: Show event
-        run: |
-          echo "Event: ${{ github.event_name }}"
 
-      - name: Run only on push
-        if: github.event_name == 'push'
-        run: |
-          echo "This step runs because this workflow was triggered by a PUSH."
+      - name: Successful step
+        run: echo "Step 1 succeeded"
 
-      - name: Run only on pull request
-        if: github.event_name == 'pull_request'
+      - name: Intentional failure
+        id: failing_step
         run: |
-          echo "This step runs because this workflow was triggered by a PULL REQUEST."
+          echo "This step will fail"
+          exit 1
+
+      - name: Normal step after failure
+        run: |
+          echo "You should NOT see this message"
+
+      - name: Run after failure
+        if: failure()
+        run: |
+          echo "A previous step failed!"
+
+      - name: Always run cleanup
+        if: always()
+        run: |
+          echo "Cleanup runs regardless of success or failure"
