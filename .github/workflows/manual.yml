@@ -1,0 +1,22 @@
+name: Manual Deployment Practice
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Manual Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start deployment
+        run: |
+          echo "Manual deployment started"
+
+      - name: Deploy application
+        run: |
+          echo "Application deployed successfully"
+
+      - name: Deployment complete
+        run: |
+          echo "Deployment completed"
