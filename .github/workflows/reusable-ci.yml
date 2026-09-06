@@ -11,4 +11,4 @@ jobs:
       - name: Run reusable test
         run: |
           echo "Reusable CI workflow is running"
-          echo "Tests passed"
+          echo "Tests passed successfully"
