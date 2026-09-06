@@ -1,1 +1,14 @@
-    
+name: Reusable CI
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run reusable test
+        run: |
+          echo "Reusable CI workflow is running"
+          echo "Tests passed"
