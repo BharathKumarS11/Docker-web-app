@@ -2,13 +2,23 @@ name: Reusable CI
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        description: "Environment to test"
+        required: true
+        type: string
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Run reusable test
+      - name: Show environment
         run: |
-          echo "Reusable CI workflow is running"
-          echo "Tests passed successfully"
+          echo "Running reusable CI"
+          echo "Environment: ${{ inputs.environment }}"
+
+      - name: Run tests
+        run: |
+          echo "Running tests for ${{ inputs.environment }}"
+          echo "Tests passed"
