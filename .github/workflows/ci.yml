@@ -1,9 +1,11 @@
+```yaml
 name: Docker CI
 
 on:
   push:
     branches:
       - main
+
   pull_request:
     branches:
       - main
@@ -13,11 +15,15 @@ env:
 
 jobs:
 
+  # =========================
+  # BUILD JOB
+  # =========================
   build:
     name: Build Docker Image
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -33,12 +39,18 @@ jobs:
           name: docker-image
           path: docker-image.tar
 
+
+  # =========================
+  # TEST JOB
+  # =========================
   test:
     name: Test Application
     runs-on: ubuntu-latest
+
     needs: build
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -50,14 +62,26 @@ jobs:
       - name: Load Docker image
         run: docker load -i docker-image.tar
 
-      - name: Show secret message
-        run: 'echo "Secret says: ${{ secrets.APP_MESSAGE }}"'
+      - name: Check secret
+        run: |
+          echo "APP_MESSAGE secret is available"
+          echo "Secret length: ${#APP_MESSAGE}"
+        env:
+          APP_MESSAGE: ${{ secrets.APP_MESSAGE }}
 
       - name: Run container
-        run: docker run -d --name test-container -p 8080:80 ${{ env.IMAGE_NAME }}:test
+        run: |
+          docker run -d \
+            --name test-container \
+            -p 8080:80 \
+            ${{ env.IMAGE_NAME }}:test
 
       - name: Test application
-        run: curl --fail http://localhost:8080
+        run: |
+          curl --fail http://localhost:8080
 
-      - name: Stop container
-        run: docker stop test-container
+      - name: Stop and remove container
+        if: always()
+        run: |
+          docker stop test-container || true
+          docker rm test-container || true
