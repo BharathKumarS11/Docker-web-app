@@ -34,8 +34,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t devops-web-app:test .
+      - name: Download Docker image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load Docker image
+        run: docker load -i docker-image.tar
+
+      - name: Save Docker image
+        run: docker save ${{ env.IMAGE_NAME }}:test -o docker-image.tar
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v4
+        with:
+         name: docker-image
+         path: docker-image.tar
 
       - name: Run container
         run: docker run -d --name test-container -p 8080:80 devops-web-app:test
