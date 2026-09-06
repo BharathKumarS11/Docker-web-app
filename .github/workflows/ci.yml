@@ -9,8 +9,9 @@ on:
       - main
 
 jobs:
-  build-and-test:
 
+  build:
+    name: Build Docker Image
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +21,19 @@ jobs:
       - name: Build Docker image
         run: docker build -t devops-web-app:test .
 
-      - name: Run Docker container
+  test:
+    name: Test Application
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t devops-web-app:test .
+
+      - name: Run container
         run: docker run -d --name test-container -p 8080:80 devops-web-app:test
 
       - name: Test application
