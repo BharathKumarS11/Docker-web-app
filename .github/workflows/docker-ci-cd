@@ -1,0 +1,45 @@
+name: Docker CI CD
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    outputs:
+      image_tag: ${{ steps.tag.outputs.image_tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate image tag
+        id: tag
+        run: |
+          IMAGE_TAG="v1.0.${GITHUB_RUN_NUMBER}"
+          echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+          echo "Image tag: $IMAGE_TAG"
+
+      - name: Build Docker image
+        run: |
+          docker build -t devops-web-app:${{ steps.tag.outputs.image_tag }} .
+          docker images
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    environment: production
+
+    steps:
+      - name: Deploy image
+        run: |
+          IMAGE_TAG="${{ needs.build.outputs.image_tag }}"
+          echo "Deploying Docker image:"
+          echo "devops-web-app:$IMAGE_TAG"
+          echo "Deployment successful"
