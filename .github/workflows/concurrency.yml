@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Start deployment
         run: |
-          echo "Deployment started"
+          echo "Deployment started sleeping for 30 seconds to simulate a long-running deployment"
           sleep 30
 
       - name: Complete deployment
