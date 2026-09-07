@@ -25,14 +25,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set lowercase image name
+        run: |
+          echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/devops-web-app:latest" >> "$GITHUB_ENV"
+
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/devops-web-app:latest .
+          docker build -t "$IMAGE_NAME" .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/devops-web-app:latest
+          docker push "$IMAGE_NAME"
 
       - name: Verify
         run: |
           echo "Docker image pushed successfully"
+          echo "Image: $IMAGE_NAME"
