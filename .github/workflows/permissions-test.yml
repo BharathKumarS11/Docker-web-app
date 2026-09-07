@@ -3,8 +3,8 @@ name: Permissions Practice
 on:
   workflow_dispatch:
 
-permissions: {}
-
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
