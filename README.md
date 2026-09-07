@@ -1,6 +1,6 @@
 # 🐳 Dockerized Web Application
 
-A simple containerized web application built using Docker and Nginx as part of my Cloud & DevOps learning journey.
+A simple containerized web application built using Docker and Nginx as part of my AWS Cloud & DevOps learning journey.
 
 ## 📌 Project Overview
 
