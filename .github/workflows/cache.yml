@@ -30,5 +30,5 @@ jobs:
 
       - name: Check dependency
         run: |
-          echo "Dependencies installed successfully"
+          echo "Dependencies installed successfully..."
           node -e "console.log(require('lodash').VERSION)"
