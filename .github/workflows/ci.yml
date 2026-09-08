@@ -16,25 +16,41 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
 
+    outputs:
+      image_tag: ${{ steps.version.outputs.image_tag }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Generate image version
+        id: version
+        run: |
+          IMAGE_TAG="v1.0.${GITHUB_RUN_NUMBER}"
+          echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+          echo "Building image version: $IMAGE_TAG"
+
       - name: Build Docker image
         run: |
-          docker build -t devops-web-app:ci .
+          docker build \
+            -t devops-web-app:${{ steps.version.outputs.image_tag }} .
 
       - name: Run container
         run: |
           docker run -d \
             --name devops-web-app \
             -p 8080:80 \
-            devops-web-app:ci
+            devops-web-app:${{ steps.version.outputs.image_tag }}
 
       - name: Test application
         run: |
           sleep 5
           curl --fail http://localhost:8080
+
+      - name: Show image version
+        run: |
+          echo "Docker image:"
+          echo "devops-web-app:${{ steps.version.outputs.image_tag }}"
 
       - name: Cleanup
         if: always()
