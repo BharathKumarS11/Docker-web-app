@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -17,6 +18,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: docker-image
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: ci.yml
+          path: .
 
       - name: Load Docker image
         run: |
