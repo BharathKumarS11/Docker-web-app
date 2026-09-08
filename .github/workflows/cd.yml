@@ -1,0 +1,33 @@
+name: CD
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Download Docker image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load Docker image
+        run: |
+          docker load -i docker-image.tar
+
+      - name: Show Docker images
+        run: |
+          docker images
+
+      - name: Deploy
+        run: |
+          echo "Production deployment started"
+          echo "Docker image loaded successfully"
+          echo "Production deployment completed"
