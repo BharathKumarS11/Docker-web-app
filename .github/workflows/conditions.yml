@@ -1,37 +1,37 @@
-name: Failure and Always Practice
+# name: Failure and Always Practice
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
+# jobs:
 
-  test:
-    name: Test Failure Handling
-    runs-on: ubuntu-latest
+#   test:
+#     name: Test Failure Handling
+#     runs-on: ubuntu-latest
 
-    steps:
+#     steps:
 
-      - name: Successful step
-        run: echo "Step 1 succeeded"
+#       - name: Successful step
+#         run: echo "Step 1 succeeded"
 
-      - name: Intentional failure
-        id: failing_step
-        run: |
-          echo "This step will fail"
-          exit 1
+#       - name: Intentional failure
+#         id: failing_step
+#         run: |
+#           echo "This step will fail"
+#           exit 1
 
-      - name: Normal step after failure
-        run: |
-          echo "You should NOT see this message"
+#       - name: Normal step after failure
+#         run: |
+#           echo "You should NOT see this message"
 
-      - name: Run after failure
-        if: failure()
-        run: |
-          echo "A previous step failed!"
+#       - name: Run after failure
+#         if: failure()
+#         run: |
+#           echo "A previous step failed!"
 
-      - name: Always run cleanup
-        if: always()
-        run: |
-          echo "Cleanup runs regardless of success or failure"
+#       - name: Always run cleanup
+#         if: always()
+#         run: |
+#           echo "Cleanup runs regardless of success or failure"
