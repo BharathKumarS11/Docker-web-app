@@ -14,14 +14,10 @@ pipeline {
         }
 
         stage('Test') {
-            steps {
-                sh '''
-                    docker run -d --name jenkins-test-app -p 80:80 $IMAGE_NAME:v1.0.0
-                    sleep 3
-                    curl --fail http://localhost:80
-                '''
-            }
-        }
+    steps {
+        sh 'exit 1'
+    }
+}
 
         stage('Push') {
             steps {
