@@ -3,11 +3,36 @@ pipeline {
 
     stages {
 
-        stage('Hello') {
+        stage('Checkout') {
             steps {
-                echo 'Hello from Jenkins Pipeline!'
+                echo 'Checking out source code'
             }
         }
 
+        stage('Build') {
+            steps {
+                echo 'Building application'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished'
+        }
+
+        success {
+            echo 'Pipeline succeeded!'
+        }
+
+        failure {
+            echo 'Pipeline failed!'
+        }
     }
 }
