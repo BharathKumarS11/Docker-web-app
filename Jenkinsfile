@@ -11,9 +11,9 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'docker run -d --name jenkins-test-app -p 8080:80 devops-web-app:jenkins'
+                sh 'docker run -d --name jenkins-test-app -p 80:80 devops-web-app:jenkins'
                 sh 'sleep 3'
-                sh 'curl --fail http://localhost:8080'
+                sh 'curl --fail http://localhost:80'
             }
         }
     }
