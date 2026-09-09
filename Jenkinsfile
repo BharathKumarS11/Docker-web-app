@@ -1,19 +1,45 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = 'bharathkumar11/devops-web-app'
+    }
+
     stages {
 
         stage('Build') {
             steps {
-                sh 'docker build -t devops-web-app:jenkins .'
+                sh 'docker build -t $IMAGE_NAME:v1.0.0 .'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'docker run -d --name jenkins-test-app -p 80:80 devops-web-app:jenkins'
-                sh 'sleep 3'
-                sh 'curl --fail http://localhost:80'
+                sh '''
+                    docker run -d --name jenkins-test-app -p 80:80 $IMAGE_NAME:v1.0.0
+                    sleep 3
+                    curl --fail http://localhost:80
+                '''
+            }
+        }
+
+        stage('Push') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login \
+                            -u "$DOCKER_USERNAME" \
+                            --password-stdin
+
+                        docker push $IMAGE_NAME:v1.0.0
+                    '''
+                }
             }
         }
     }
@@ -21,14 +47,6 @@ pipeline {
     post {
         always {
             sh 'docker rm -f jenkins-test-app || true'
-        }
-
-        success {
-            echo 'Docker application test passed!'
-        }
-
-        failure {
-            echo 'Docker application test failed!'
         }
     }
 }
