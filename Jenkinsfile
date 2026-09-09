@@ -27,12 +27,12 @@ pipeline {
                 sh '''
                     docker run -d \
                         --name jenkins-test-app \
-                        -p 8081:80 \
+                        -p 8080:80 \
                         $IMAGE_NAME:$IMAGE_TAG
 
                     sleep 3
 
-                    curl --fail http://localhost:8081
+                    curl --fail http://localhost:8080
                 '''
             }
         }
