@@ -5,34 +5,36 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Checking out source code'
+                git 'https://github.com/YOUR_USERNAME/devops-web-app.git'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building application'
+                sh 'docker build -t devops-web-app:jenkins .'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests'
+                sh 'docker run -d --name jenkins-test-app -p 8080:80 devops-web-app:jenkins'
+                sh 'sleep 3'
+                sh 'curl --fail http://localhost:8080'
             }
         }
     }
 
     post {
         always {
-            echo 'Pipeline finished'
+            sh 'docker rm -f jenkins-test-app || true'
         }
 
         success {
-            echo 'Pipeline succeeded!'
+            echo 'Docker application test passed!'
         }
 
         failure {
-            echo 'Pipeline failed!'
+            echo 'Docker application test failed!'
         }
     }
 }
