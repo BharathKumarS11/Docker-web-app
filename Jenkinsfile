@@ -5,7 +5,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/BharathKumarS11/devops-web-app.git'
+                git 'https://github.com/BharathKumarS11/docker-web-app.git'
             }
         }
 
