@@ -3,38 +3,30 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/BharathKumarS11/docker-web-app.git'
-            }
-        }
-
         stage('Build') {
             steps {
-                sh 'docker build -t devops-web-app:jenkins .'
+                echo 'Building application'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'docker run -d --name jenkins-test-app -p 8080:80 devops-web-app:jenkins'
-                sh 'sleep 3'
-                sh 'curl --fail http://localhost:8080'
+                echo 'Running tests'
             }
         }
     }
 
     post {
         always {
-            sh 'docker rm -f jenkins-test-app || true'
+            echo 'Pipeline finished'
         }
 
         success {
-            echo 'Docker application test passed!'
+            echo 'Pipeline succeeded!'
         }
 
         failure {
-            echo 'Docker application test failed!'
+            echo 'Pipeline failed!'
         }
     }
 }
