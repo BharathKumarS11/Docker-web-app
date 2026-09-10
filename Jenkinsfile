@@ -63,9 +63,9 @@ pipeline {
 
     post {
         always {
-           echo "Build #${BUILD_NUMBER} finished."
-           docker rm -f jenkins-test-app || true
-}
+        echo "Build #${BUILD_NUMBER} finished."
+        sh 'docker rm -f jenkins-test-app || true'
+        }
 
         success {
             echo 'CI/CD pipeline completed successfully!'
