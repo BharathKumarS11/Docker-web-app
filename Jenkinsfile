@@ -71,7 +71,7 @@ pipeline {
         }
 
         failure {
-            echo 'CI/CD pipeline failed. Check the logs.'
+            echo 'CI/CD pipeline failed. Check the logs...'
         }
     }
 }
